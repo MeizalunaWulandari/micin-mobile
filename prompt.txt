@@ -31,6 +31,35 @@ buat issue.md
         "status": 200
      }
 
+Buat issue.md
+1. buat Home Aplikasi 
+    - Setiap User membuka Aplikasi pertama kali akan melakukan update checking
+    - Jika     "is_force_update": true, maka akan muncul modal yang tidak bisa di close dan ada link yang bisa klik untuk menuju link update
+2. Buat Sebuah card yang reusebale
+    - Lalukan Hit api ke /provider 
+    -JSON provider
+    {
+        "data": [
+            {
+            "slug": "naver",
+            "name": "Naver",
+            "description": "Konten dalam bahasa korea, tidak disediakan penerjemah bawaan.",
+            "is_publish": true,
+            "need_proxy": false,
+            "need_vpn": false,
+            "required_country_access": "",
+            "min_required_build": 1
+            }
+        ],
+        "message": "GET_SUCCESS",
+        "status": 200
+        }
+        - SLUG Akan digunakan untuk melakukan hit api lain
+        - Name akan digunakan untuk Title card
+        - card akan melakukan looping is_publish = true saja yang akan ditampilkan
+        - jika aplikasi user versinya dibawah min_required_build aplikasi user bawaah maka jika user klik tidak masuk ke halaman provider tetapi muncul notifikasi update  
+        
+
     
 Jangan terlalu low level atau detail
 Cukup Instruksikan secara hig level 

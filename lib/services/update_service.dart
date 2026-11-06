@@ -1,31 +1,35 @@
 import 'dart:convert';
-import 'dart:io';
-import '../core/config/app_config.dart';
-import '../models/app_update_model.dart';
+import 'package:http/http.dart' as http;
 
-/// Layanan untuk memeriksa pembaruan aplikasi ke server
+class UpdateInfo {
+  final bool isForceUpdate;
+  final String? updateUrl;
+  final String? message;
+
+  UpdateInfo({required this.isForceUpdate, this.updateUrl, this.message});
+
+  factory UpdateInfo.fromJson(Map<String, dynamic> json) => UpdateInfo(
+        isForceUpdate: json['is_force_update'] as bool,
+        updateUrl: json['update_url'] as String?,
+        message: json['message'] as String?,
+      );
+}
+
 class UpdateService {
-  final HttpClient _client;
+  static const String _baseUrl = 'https://example.com'; // replace with real base URL
+  static const String _endpoint = '/check-update';
 
-  UpdateService({HttpClient? client}) : _client = client ?? HttpClient();
-
-  /// Mengambil informasi update aplikasi terbaru dari server
-  Future<AppUpdateResponse?> checkUpdate() async {
+  /// Checks for an app update.
+  /// Returns null if no update info is available.
+  static Future<UpdateInfo?> checkUpdate() async {
+    final uri = Uri.parse('$_baseUrl$_endpoint');
     try {
-      final uri = Uri.parse(AppConfig.checkUpdateUrl);
-      final request = await _client.getUrl(uri);
-      request.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
-
-      final response = await request.close();
-      if (response.statusCode == HttpStatus.ok) {
-        final body = await response.transform(utf8.decoder).join();
-        final jsonMap = jsonDecode(body) as Map<String, dynamic>;
-        return AppUpdateResponse.fromJson(jsonMap);
-      }
-      return null;
+      final response = await http.get(uri);
+      if (response.statusCode != 200) return null;
+      final Map<String, dynamic> jsonBody = json.decode(response.body) as Map<String, dynamic>;
+      return UpdateInfo.fromJson(jsonBody);
     } catch (_) {
       return null;
     }
   }
 }
-

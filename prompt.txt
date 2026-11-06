@@ -13,4 +13,27 @@ Cukup Instruksikan secara hig level
 nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan
 
 
-buat issue.md 
+buat issue.md
+1. Rubah nama aplikasi menjadi MicinProject 
+2. buat sebuah config
+    - BASE_URL: https://given-cary-zaxkyu-052e8853.koyeb.app
+    - CHECK_UPDATE: check-update
+     -- JSON CHECK UPDATE
+     {
+        "data": {
+            "latest_version_name": "1.0.1",
+            "latest_build_number": 1,
+            "is_force_update": false,
+            "update_message": "Penambahan server UK dan optimalisasi streaming olahraga.",
+            "update_url": "https://domain-kamu.com/micin-v1.0.1.apk"
+        },
+        "message": "GET_SUCCESS",
+        "status": 200
+     }
+
+    
+Jangan terlalu low level atau detail
+Cukup Instruksikan secara hig level 
+nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan
+Jangan langsung commit ke branch master setiap perubahan
+perubahan akan ada akan dimasukkan dalam  pull request

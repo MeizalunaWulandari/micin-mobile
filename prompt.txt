@@ -1,0 +1,13 @@
+buatkan issue.md, berisi planning untuk membuat ini:  
+
+1. Buat Project baru di folder ini menggunakan Flutter 
+ - Buat aplikasi dengan com.micinproject.app
+2. Buatkan structure Project 
+ - MVVC
+ - Component Resuable
+3. Tema Aplikasi 
+ - Selalu darkmode
+ 
+Jangan terlalu low level atau detail
+Cukup Instruksikan secara hig level 
+nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan

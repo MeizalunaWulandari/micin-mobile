@@ -47,8 +47,6 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
-# Local planning and prompt files
+# Local planning files
 issue.md
-prompt.txt
-prompt.md
 

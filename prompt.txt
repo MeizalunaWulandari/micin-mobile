@@ -13,4 +13,216 @@ Cukup Instruksikan secara hig level
 nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan
 
 
-buat issue.md 
+buat issue.md
+1. Rubah nama aplikasi menjadi MicinProject 
+2. buat sebuah config
+    - BASE_URL: https://given-cary-zaxkyu-052e8853.koyeb.app
+    - CHECK_UPDATE: check-update
+     -- JSON CHECK UPDATE
+     {
+        "data": {
+            "latest_version_name": "1.0.1",
+            "latest_build_number": 1,
+            "is_force_update": false,
+            "update_message": "Penambahan server UK dan optimalisasi streaming olahraga.",
+            "update_url": "https://domain-kamu.com/micin-v1.0.1.apk"
+        },
+        "message": "GET_SUCCESS",
+        "status": 200
+     }
+
+Buat issue.md
+1. buat Home Aplikasi 
+    - Setiap User membuka Aplikasi pertama kali akan melakukan update checking
+    - Jika     "is_force_update": true, maka akan muncul modal yang tidak bisa di close dan ada link yang bisa klik untuk menuju link update
+2. Buat Sebuah card yang reusebale
+    - Lalukan Hit api ke /provider 
+    -JSON provider
+    {
+        "data": [
+            {
+            "slug": "naver",
+            "name": "Naver",
+            "description": "Konten dalam bahasa korea, tidak disediakan penerjemah bawaan.",
+            "is_publish": true,
+            "need_proxy": false,
+            "need_vpn": false,
+            "required_country_access": "",
+            "min_required_build": 1
+            }
+        ],
+        "message": "GET_SUCCESS",
+        "status": 200
+        }
+        - SLUG Akan digunakan untuk melakukan hit api lain
+        - Name akan digunakan untuk Title card
+        - card akan melakukan looping is_publish = true saja yang akan ditampilkan
+        - jika aplikasi user versinya dibawah min_required_build aplikasi user bawaah maka jika user klik tidak masuk ke halaman provider tetapi muncul notifikasi update  
+        
+
+Buat issue.md
+1. Perbaiki Home Page
+    - Buat footer Version aplikasi dan bandingkan dengan endpoint check update jika kurang dibawah maka ada link update dan jika sama hanya tulisan Latest  
+    - Buat Footer Copyright @year - Micin Project hanya tampil Di Home
+    - Buat Card Homepage bisa dikik dan menuju ke request api Base URL/slug
+    - Buat halaman yang menampilkan data card slug
+    - JSON: 
+    {
+  "data": [
+    {
+      "id": "20261109047018",
+      "title": "KB스타즈 vs 우리은행",
+      "description": "KB스타즈 vs 우리은행",
+      "schedule": "17:01 WIB",
+      "category": "WKBL",
+      "status": "ended",
+      "type": "past_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_179/1603086813757DIFb4_PNG/03_basketball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261110SC1",
+      "title": "삼성 우승을 만든 '핵심 지표' | 스탯캐스터",
+      "description": "삼성 우승을 만든 '핵심 지표' | 스탯캐스터",
+      "schedule": "10 November 2026 | 12:00 WIB",
+      "category": "국내야구기타",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_234/1603086763421sxNLT_PNG/01_baseball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261110023F18",
+      "title": "SOOP vs IBK기업은행",
+      "description": "SOOP vs IBK기업은행",
+      "schedule": "10 November 2026 | 17:00 WIB",
+      "category": "여자배구",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_126/1603087014006daH45_PNG/04_volleyball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261110023M17",
+      "title": "삼성화재 vs 한국전력",
+      "description": "삼성화재 vs 한국전력",
+      "schedule": "10 November 2026 | 17:00 WIB",
+      "category": "남자배구",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_126/1603087014006daH45_PNG/04_volleyball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261110NBARADIO",
+      "title": "고품격 NBA 전문방송ㅣ느바라디오",
+      "description": "고품격 NBA 전문방송ㅣ느바라디오",
+      "schedule": "10 November 2026 | 18:00 WIB",
+      "category": "농구기타",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_179/1603086813757DIFb4_PNG/03_basketball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261111CDW1",
+      "title": "제13회 최동원상 시상식",
+      "description": "제13회 최동원상 시상식",
+      "schedule": "11 November 2026 | 12:00 WIB",
+      "category": "국내야구기타",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_234/1603086763421sxNLT_PNG/01_baseball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261111023M19",
+      "title": "우리카드 vs 대한항공",
+      "description": "우리카드 vs 대한항공",
+      "schedule": "11 November 2026 | 17:00 WIB",
+      "category": "남자배구",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_126/1603087014006daH45_PNG/04_volleyball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261111023F20",
+      "title": "현대건설 vs GS칼텍스",
+      "description": "현대건설 vs GS칼텍스",
+      "schedule": "11 November 2026 | 17:00 WIB",
+      "category": "여자배구",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_126/1603087014006daH45_PNG/04_volleyball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261111047019",
+      "title": "신한은행 vs 삼성생명",
+      "description": "신한은행 vs 삼성생명",
+      "schedule": "11 November 2026 | 17:00 WIB",
+      "category": "WKBL",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_179/1603086813757DIFb4_PNG/03_basketball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261112023F22",
+      "title": "정관장 vs 한국도로공사",
+      "description": "정관장 vs 한국도로공사",
+      "schedule": "12 November 2026 | 17:00 WIB",
+      "category": "여자배구",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_126/1603087014006daH45_PNG/04_volleyball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261112023M21",
+      "title": "OK저축은행 vs 현대캐피탈",
+      "description": "OK저축은행 vs 현대캐피탈",
+      "schedule": "12 November 2026 | 17:00 WIB",
+      "category": "남자배구",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://sports-phinf.pstatic.net/20201019_126/1603087014006daH45_PNG/04_volleyball.png",
+      "episode_count": 0
+    },
+    {
+      "id": "20261112IH1",
+      "title": "HL안양 vs 요코하마 그리츠 - 아시아리그 아이스하키",
+      "description": "HL안양 vs 요코하마 그리츠 - 아시아리그 아이스하키",
+      "schedule": "12 November 2026 | 17:00 WIB",
+      "category": "일반",
+      "status": "upcoming",
+      "type": "upcoming_event",
+      "has_image": true,
+      "thumbnail": "https://ssl.pstatic.net/static/sports/common/livecenter/new/bg_live_etc.jpg",
+      "episode_count": 0
+    }
+  ],
+  "message": "NAVER_RESPONSE",
+  "status": 200,
+  "title": "Naver"
+}
+
+- halaman secara otomatis melakukan pengaturan load card berdasarkan "has_image": true, jika true maka load card yang bergambar jika tidak load card biasa
+    
+Jangan terlalu low level atau detail
+Cukup Instruksikan secara hig level 
+nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan
+Jangan langsung commit ke branch master setiap perubahan
+perubahan akan ada akan dimasukkan dalam  pull request

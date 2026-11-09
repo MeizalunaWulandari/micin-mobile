@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../core/config/app_config.dart';
 import '../models/provider.dart';
 import '../models/provider_content_model.dart';
+import '../models/watch_detail_model.dart';
 
 /// Response root dari endpoint `/provider`.
 class ProviderResponse {
@@ -60,5 +61,23 @@ class ProviderService {
     final Map<String, dynamic> jsonBody =
         json.decode(response.body) as Map<String, dynamic>;
     return ProviderContentResponse.fromJson(jsonBody);
+  }
+
+  /// Mengambil detail konten untuk halaman watch: `BASE_URL/{provider_slug}/{id}`.
+  /// Melempar [Exception] jika response bukan 200.
+  static Future<WatchDetailResponse> fetchWatchDetail(
+      String providerSlug, String id) async {
+    final cleanSlug =
+        providerSlug.startsWith('/') ? providerSlug.substring(1) : providerSlug;
+    final cleanId = id.startsWith('/') ? id.substring(1) : id;
+    final uri = Uri.parse('${AppConfig.baseUrl}/$cleanSlug/$cleanId');
+    final response = await http.get(uri).timeout(const Duration(seconds: 10));
+    if (response.statusCode != 200) {
+      throw Exception(
+          'Gagal memuat detail konten ($cleanSlug/$cleanId): status ${response.statusCode}');
+    }
+    final Map<String, dynamic> jsonBody =
+        json.decode(response.body) as Map<String, dynamic>;
+    return WatchDetailResponse.fromJson(jsonBody);
   }
 }

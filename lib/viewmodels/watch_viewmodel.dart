@@ -111,6 +111,9 @@ class WatchViewModel extends ChangeNotifier {
 
     final configuration = BetterPlayerConfiguration(
       aspectRatio: 16 / 9,
+      fit: BoxFit.contain,
+      autoDetectFullscreenAspectRatio: true,
+      autoDetectFullscreenDeviceOrientation: true,
       autoPlay: true,
       looping: false,
       allowedScreenSleep: false,

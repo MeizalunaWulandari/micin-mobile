@@ -98,6 +98,10 @@ class WatchViewModel extends ChangeNotifier {
       drmConfig = BetterPlayerDrmConfiguration(
         drmType: BetterPlayerDrmType.clearKey,
         clearKey: clearKeyJson,
+        headers: {
+          'User-Agent': AppConfig.userAgent,
+          'user-agent': AppConfig.userAgent,
+        },
       );
     }
 
@@ -106,7 +110,11 @@ class WatchViewModel extends ChangeNotifier {
       detail.manifest,
       videoFormat: videoFormat,
       drmConfiguration: drmConfig,
-      headers: AppConfig.defaultHeaders,
+      headers: {
+        'User-Agent': AppConfig.userAgent,
+        'user-agent': AppConfig.userAgent,
+        'Accept': '*/*',
+      },
     );
 
     final configuration = BetterPlayerConfiguration(

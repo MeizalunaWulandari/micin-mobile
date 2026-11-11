@@ -1,5 +1,6 @@
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
+import '../core/config/app_config.dart';
 import '../core/constants/app_colors.dart';
 import '../models/watch_detail_model.dart';
 import '../services/provider_service.dart';
@@ -105,6 +106,7 @@ class WatchViewModel extends ChangeNotifier {
       detail.manifest,
       videoFormat: videoFormat,
       drmConfiguration: drmConfig,
+      headers: AppConfig.defaultHeaders,
     );
 
     final configuration = BetterPlayerConfiguration(

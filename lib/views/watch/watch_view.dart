@@ -1,5 +1,6 @@
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:flutter/material.dart';
+import '../../core/config/app_config.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/watch_detail_model.dart';
 import '../../viewmodels/watch_viewmodel.dart';
@@ -202,6 +203,7 @@ class _WatchViewState extends State<WatchView>
             if (detail.thumbnail.isNotEmpty)
               Image.network(
                 detail.thumbnail,
+                headers: AppConfig.defaultHeaders,
                 fit: BoxFit.cover,
                 errorBuilder: (_, _, _) => const SizedBox.shrink(),
               ),

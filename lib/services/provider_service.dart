@@ -39,7 +39,9 @@ class ProviderService {
   /// Melempar [Exception] jika response bukan 200.
   static Future<List<ProviderItem>> fetchProviders() async {
     final uri = Uri.parse('${AppConfig.baseUrl}$_endpoint');
-    final response = await http.get(uri).timeout(const Duration(seconds: 10));
+    final response = await http
+        .get(uri, headers: AppConfig.defaultHeaders)
+        .timeout(const Duration(seconds: 10));
     if (response.statusCode != 200) {
       throw Exception('Gagal memuat provider (status: ${response.statusCode})');
     }
@@ -53,7 +55,9 @@ class ProviderService {
   static Future<ProviderContentResponse> fetchProviderContent(String slug) async {
     final cleanSlug = slug.startsWith('/') ? slug.substring(1) : slug;
     final uri = Uri.parse('${AppConfig.baseUrl}/$cleanSlug');
-    final response = await http.get(uri).timeout(const Duration(seconds: 10));
+    final response = await http
+        .get(uri, headers: AppConfig.defaultHeaders)
+        .timeout(const Duration(seconds: 10));
     if (response.statusCode != 200) {
       throw Exception(
           'Gagal memuat konten ($cleanSlug): status ${response.statusCode}');
@@ -71,7 +75,9 @@ class ProviderService {
         providerSlug.startsWith('/') ? providerSlug.substring(1) : providerSlug;
     final cleanId = id.startsWith('/') ? id.substring(1) : id;
     final uri = Uri.parse('${AppConfig.baseUrl}/$cleanSlug/$cleanId');
-    final response = await http.get(uri).timeout(const Duration(seconds: 10));
+    final response = await http
+        .get(uri, headers: AppConfig.defaultHeaders)
+        .timeout(const Duration(seconds: 10));
     if (response.statusCode != 200) {
       throw Exception(
           'Gagal memuat detail konten ($cleanSlug/$cleanId): status ${response.statusCode}');

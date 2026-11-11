@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/app_config.dart';
 import '../constants/app_colors.dart';
 import '../../models/provider_content_model.dart';
 
@@ -46,6 +47,7 @@ class ProviderContentCard extends StatelessWidget {
               aspectRatio: 16 / 9,
               child: Image.network(
                 item.thumbnail,
+                headers: AppConfig.defaultHeaders,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, progress) {
                   if (progress == null) return child;

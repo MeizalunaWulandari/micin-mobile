@@ -185,9 +185,69 @@ class _WatchViewState extends State<WatchView>
     if (detail.manifest.isNotEmpty && _vm.betterPlayerController != null) {
       return AspectRatio(
         aspectRatio: 16 / 9,
-        child: BetterPlayer(
-          key: _vm.betterPlayerKey,
-          controller: _vm.betterPlayerController!,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            BetterPlayer(
+              key: _vm.betterPlayerKey,
+              controller: _vm.betterPlayerController!,
+            ),
+            if (_vm.playerErrorMessage != null)
+              Container(
+                color: Colors.black.withValues(alpha: 0.88),
+                padding: const EdgeInsets.all(16),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _vm.isStream403
+                            ? Icons.lock_outline_rounded
+                            : Icons.error_outline_rounded,
+                        color: AppColors.error,
+                        size: 40,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _vm.isStream403
+                            ? 'Akses Siaran Dibatasi (403)'
+                            : 'Kendala Pemutaran',
+                        style: const TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _vm.playerErrorMessage!,
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: AppColors.textPrimary,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                        ),
+                        onPressed: _vm.init,
+                        icon: const Icon(Icons.refresh_rounded, size: 16),
+                        label: const Text('Coba Lagi'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
       );
     }

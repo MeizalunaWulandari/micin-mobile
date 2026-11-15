@@ -1,9 +1,12 @@
+import '../core/utils/abi_helper.dart';
+
 /// Model data untuk payload informasi update aplikasi
 class AppUpdateData {
   final String latestVersionName;
   final int latestBuildNumber;
   final bool isForceUpdate;
   final String updateMessage;
+  final String rawUpdateUrl;
   final String updateUrl;
 
   const AppUpdateData({
@@ -12,15 +15,24 @@ class AppUpdateData {
     required this.isForceUpdate,
     required this.updateMessage,
     required this.updateUrl,
-  });
+    String? rawUpdateUrl,
+  }) : rawUpdateUrl = rawUpdateUrl ?? updateUrl;
 
   factory AppUpdateData.fromJson(Map<String, dynamic> json) {
+    final rawUrl = json['update_url'] as String? ?? '';
+    final versionName = json['latest_version_name'] as String? ?? '';
+    final resolvedUrl = AbiHelper.resolveApkUrl(
+      rawUrl,
+      versionName: versionName,
+    );
+
     return AppUpdateData(
-      latestVersionName: json['latest_version_name'] as String? ?? '',
+      latestVersionName: versionName,
       latestBuildNumber: (json['latest_build_number'] as num?)?.toInt() ?? 0,
       isForceUpdate: json['is_force_update'] as bool? ?? false,
       updateMessage: json['update_message'] as String? ?? '',
-      updateUrl: json['update_url'] as String? ?? '',
+      updateUrl: resolvedUrl,
+      rawUpdateUrl: rawUrl,
     );
   }
 
@@ -31,6 +43,7 @@ class AppUpdateData {
       'is_force_update': isForceUpdate,
       'update_message': updateMessage,
       'update_url': updateUrl,
+      'raw_update_url': rawUpdateUrl,
     };
   }
 }

@@ -20,6 +20,9 @@ class WatchViewModel extends ChangeNotifier {
   BetterPlayerController? _betterPlayerController;
   final GlobalKey _betterPlayerKey = GlobalKey();
   bool _isPipSupported = false;
+  bool _isDisposed = false;
+  String? _playerErrorMessage;
+  bool _isStream403 = false;
 
   WatchViewModel({
     required this.providerSlug,
@@ -36,15 +39,21 @@ class WatchViewModel extends ChangeNotifier {
   BetterPlayerController? get betterPlayerController => _betterPlayerController;
   GlobalKey get betterPlayerKey => _betterPlayerKey;
   bool get isPipSupported => _isPipSupported;
+  String? get playerErrorMessage => _playerErrorMessage;
+  bool get isStream403 => _isStream403;
 
   Future<void> init() async {
     _state = WatchState.loading;
     _errorMessage = '';
+    _playerErrorMessage = null;
+    _isStream403 = false;
     notifyListeners();
 
     try {
       final response =
           await ProviderService.fetchWatchDetail(providerSlug, contentId);
+      if (_isDisposed) return;
+
       if (response.title.isNotEmpty) {
         _title = response.title;
       }
@@ -65,11 +74,14 @@ class WatchViewModel extends ChangeNotifier {
 
       _state = WatchState.success;
     } catch (e) {
-      _errorMessage = e.toString();
+      if (_isDisposed) return;
+      _errorMessage = e.toString().replaceFirst('Exception: ', '');
       _state = WatchState.error;
     }
 
-    notifyListeners();
+    if (!_isDisposed) {
+      notifyListeners();
+    }
   }
 
   void _setupVideoPlayer(WatchDetailData detail) {
@@ -132,6 +144,7 @@ class WatchViewModel extends ChangeNotifier {
         enableMute: true,
         enablePlayPause: true,
         enableProgressBar: true,
+        enableRetry: false, // Ditangani sendiri via WatchViewModel/View agar tidak infinite loop
         controlBarColor: AppColors.surface.withValues(alpha: 0.85),
         progressBarPlayedColor: AppColors.primary,
         progressBarHandleColor: AppColors.primary,
@@ -144,8 +157,40 @@ class WatchViewModel extends ChangeNotifier {
       betterPlayerDataSource: dataSource,
     );
 
+    // Daftarkan GlobalKey ke controller untuk keperluan PiP
+    _betterPlayerController!.setBetterPlayerGlobalKey(_betterPlayerKey);
+
+    // Tangani event pemutar video, khususnya deteksi error 403 atau error stream
+    _betterPlayerController!.addEventsListener(_onPlayerEvent);
+
     // Cek dukungan Picture-in-Picture
     _checkPipSupport();
+  }
+
+  void _onPlayerEvent(BetterPlayerEvent event) {
+    if (_isDisposed) return;
+
+    if (event.betterPlayerEventType == BetterPlayerEventType.exception) {
+      final exceptionObj = event.parameters?['exception'];
+      final exceptionStr = exceptionObj?.toString() ?? '';
+      debugPrint('WatchViewModel: Player exception event received: $exceptionStr');
+
+      final isForbidden = exceptionStr.contains('403') ||
+          exceptionStr.toLowerCase().contains('forbidden') ||
+          exceptionStr.toLowerCase().contains('response code: 403');
+
+      _isStream403 = isForbidden;
+      _playerErrorMessage = isForbidden
+          ? 'Akses streaming ditolak (403 Forbidden). Siaran mungkin telah berakhir atau akses dibatasi.'
+          : 'Gagal memutar streaming: $exceptionStr';
+
+      // Hentikan pemutaran secara aman untuk mencegah ANR / infinite buffering
+      try {
+        _betterPlayerController?.pause();
+      } catch (_) {}
+
+      notifyListeners();
+    }
   }
 
   Future<void> _checkPipSupport() async {
@@ -153,7 +198,9 @@ class WatchViewModel extends ChangeNotifier {
       if (_betterPlayerController != null) {
         _isPipSupported =
             await _betterPlayerController!.isPictureInPictureSupported();
-        notifyListeners();
+        if (!_isDisposed) {
+          notifyListeners();
+        }
       }
     } catch (_) {
       _isPipSupported = false;
@@ -161,10 +208,15 @@ class WatchViewModel extends ChangeNotifier {
   }
 
   Future<void> enablePictureInPicture() async {
+    if (_betterPlayerController == null || _isDisposed) return;
     try {
-      if (_betterPlayerController != null) {
-        await _betterPlayerController!.enablePictureInPicture(_betterPlayerKey);
+      // Pastikan GlobalKey terpasang dan widget aktif di view tree
+      if (_betterPlayerKey.currentContext == null) {
+        debugPrint('Cannot enter PiP: betterPlayerKey context is null');
+        return;
       }
+      _betterPlayerController!.setBetterPlayerGlobalKey(_betterPlayerKey);
+      await _betterPlayerController!.enablePictureInPicture(_betterPlayerKey);
     } catch (e) {
       debugPrint('Error enabling PiP: $e');
     }
@@ -172,7 +224,14 @@ class WatchViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _betterPlayerController?.dispose();
+    _isDisposed = true;
+    try {
+      _betterPlayerController?.removeEventsListener(_onPlayerEvent);
+      _betterPlayerController?.dispose();
+    } catch (e) {
+      debugPrint('Error disposing BetterPlayerController: $e');
+    }
+    _betterPlayerController = null;
     super.dispose();
   }
 }

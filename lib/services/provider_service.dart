@@ -35,6 +35,17 @@ class ProviderService {
 
   static const String _endpoint = '/provider';
 
+  static String _formatHttpError(int statusCode, String context) {
+    if (statusCode == 403) {
+      return 'Akses ditolak (403 Forbidden). Layanan tidak mengizinkan akses ke $context.';
+    } else if (statusCode == 404) {
+      return 'Konten tidak ditemukan (404 Not Found) untuk $context.';
+    } else if (statusCode >= 500) {
+      return 'Server mengalami gangguan (Status $statusCode). Silakan coba lagi nanti.';
+    }
+    return 'Gagal memuat $context (status: $statusCode)';
+  }
+
   /// Mengambil semua provider dari server `/provider`.
   /// Melempar [Exception] jika response bukan 200.
   static Future<List<ProviderItem>> fetchProviders() async {
@@ -43,7 +54,7 @@ class ProviderService {
         .get(uri, headers: AppConfig.defaultHeaders)
         .timeout(const Duration(seconds: 10));
     if (response.statusCode != 200) {
-      throw Exception('Gagal memuat provider (status: ${response.statusCode})');
+      throw Exception(_formatHttpError(response.statusCode, 'daftar provider'));
     }
     final Map<String, dynamic> jsonBody =
         json.decode(response.body) as Map<String, dynamic>;
@@ -59,8 +70,7 @@ class ProviderService {
         .get(uri, headers: AppConfig.defaultHeaders)
         .timeout(const Duration(seconds: 10));
     if (response.statusCode != 200) {
-      throw Exception(
-          'Gagal memuat konten ($cleanSlug): status ${response.statusCode}');
+      throw Exception(_formatHttpError(response.statusCode, 'konten ($cleanSlug)'));
     }
     final Map<String, dynamic> jsonBody =
         json.decode(response.body) as Map<String, dynamic>;
@@ -79,8 +89,8 @@ class ProviderService {
         .get(uri, headers: AppConfig.defaultHeaders)
         .timeout(const Duration(seconds: 10));
     if (response.statusCode != 200) {
-      throw Exception(
-          'Gagal memuat detail konten ($cleanSlug/$cleanId): status ${response.statusCode}');
+      throw Exception(_formatHttpError(
+          response.statusCode, 'detail konten ($cleanSlug/$cleanId)'));
     }
     final Map<String, dynamic> jsonBody =
         json.decode(response.body) as Map<String, dynamic>;

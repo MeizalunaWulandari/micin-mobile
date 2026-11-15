@@ -68,6 +68,55 @@ void main() {
       expect(serialized['data']['latest_version_name'], '1.0.1');
       expect(serialized['data']['is_force_update'], false);
     });
+
+    test('Resolves dynamic {abi} and {version} in update_url template', () {
+      const templateJson = '''
+      {
+        "data": {
+          "latest_version_name": "1.0.0",
+          "latest_build_number": 1,
+          "is_force_update": false,
+          "update_message": "Penambahan server UK dan optimalisasi streaming olahraga.",
+          "update_url": "https://github.com/MicinProject-{abi}-{version}.apk"
+        },
+        "message": "GET_SUCCESS",
+        "status": 200
+      }
+      ''';
+      final jsonMap = jsonDecode(templateJson) as Map<String, dynamic>;
+      final response = AppUpdateResponse.fromJson(jsonMap);
+      final data = response.data!;
+
+      expect(data.rawUpdateUrl, 'https://github.com/MicinProject-{abi}-{version}.apk');
+      expect(data.updateUrl.contains('{abi}'), isFalse);
+      expect(data.updateUrl.contains('{version}'), isFalse);
+      expect(data.updateUrl.endsWith('-1.0.0.apk'), isTrue);
+    });
+
+    test('Resolves filename-only APK template to GitHub release link', () {
+      const filenameJson = '''
+      {
+        "data": {
+          "latest_version_name": "1.0.0",
+          "latest_build_number": 1,
+          "is_force_update": false,
+          "update_message": "Update test",
+          "update_url": "MicinProject_{abi}_{version}.apk"
+        },
+        "message": "GET_SUCCESS",
+        "status": 200
+      }
+      ''';
+      final jsonMap = jsonDecode(filenameJson) as Map<String, dynamic>;
+      final response = AppUpdateResponse.fromJson(jsonMap);
+      final data = response.data!;
+
+      expect(
+        data.updateUrl.startsWith('https://github.com/MeizalunaWulandari/micin-mobile/releases/download/v1.0.0/MicinProject_'),
+        isTrue,
+      );
+      expect(data.updateUrl.endsWith('_1.0.0.apk'), isTrue);
+    });
   });
 }
 

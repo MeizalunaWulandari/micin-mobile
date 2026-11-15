@@ -1,33 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../core/config/app_config.dart';
+import '../models/app_update_model.dart';
 
-class UpdateInfo {
-  final bool isForceUpdate;
-  final String? updateUrl;
-  final String? message;
-
-  UpdateInfo({required this.isForceUpdate, this.updateUrl, this.message});
-
-  factory UpdateInfo.fromJson(Map<String, dynamic> json) => UpdateInfo(
-        isForceUpdate: json['is_force_update'] as bool,
-        updateUrl: json['update_url'] as String?,
-        message: json['message'] as String?,
-      );
-}
-
+/// Service untuk memeriksa pembaruan aplikasi dari server.
 class UpdateService {
-  static const String _baseUrl = 'https://example.com'; // replace with real base URL
-  static const String _endpoint = '/check-update';
+  UpdateService._();
 
-  /// Checks for an app update.
-  /// Returns null if no update info is available.
-  static Future<UpdateInfo?> checkUpdate() async {
-    final uri = Uri.parse('$_baseUrl$_endpoint');
+  /// Memanggil endpoint [AppConfig.checkUpdateUrl] dan mengembalikan
+  /// [AppUpdateResponse]. Mengembalikan `null` jika terjadi error jaringan.
+  static Future<AppUpdateResponse?> checkUpdate() async {
+    final uri = Uri.parse(AppConfig.checkUpdateUrl);
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri).timeout(const Duration(seconds: 10));
       if (response.statusCode != 200) return null;
-      final Map<String, dynamic> jsonBody = json.decode(response.body) as Map<String, dynamic>;
-      return UpdateInfo.fromJson(jsonBody);
+      final Map<String, dynamic> jsonBody =
+          json.decode(response.body) as Map<String, dynamic>;
+      return AppUpdateResponse.fromJson(jsonBody);
     } catch (_) {
       return null;
     }

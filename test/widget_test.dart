@@ -9,7 +9,7 @@ void main() {
     await tester.pumpWidget(const MicinApp());
 
     // Verifikasi judul dan banner
-    expect(find.text('Micin App'), findsOneWidget);
+    expect(find.text('MicinProject'), findsOneWidget);
     expect(find.text('Always Dark Mode'), findsOneWidget);
     expect(find.text('Tambah Task Baru'), findsOneWidget);
 

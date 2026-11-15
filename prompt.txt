@@ -226,3 +226,37 @@ Cukup Instruksikan secara hig level
 nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan
 Jangan langsung commit ke branch master setiap perubahan
 perubahan akan ada akan dimasukkan dalam  pull request
+
+Buat issue.md
+1. Buat Halaman Content provider bisa dikik
+BASE_URL/{provider slug}/{ID}
+    - JSON
+    {
+  "data": {
+    "id": "20261109047018",
+    "title": "",
+    "description": "",
+    "schedule": "17:01 WIB",
+    "status": "ended",
+    "type": "past_event",
+    "thumbnail": "",
+    "manifest": "",
+    "drm": false,
+    "kid": "",
+    "key": ""
+  },
+  "message": "GET_SUCCESS",
+  "status": 200,
+  "title": "Naver"
+}
+
+- Buat video play yang bisa memutar dash maupun hls, Baik Encrpyed ataupun tidak  "drm": false, 
+- Buat agar bisa pip referensi layout https://siegheil.micinproject.my.id/naver/20261109047018/watch
+- Buat Chat Admin: Chat Under Development
+
+
+Jangan terlalu low level atau detail
+Cukup Instruksikan secara hig level 
+nanti dokumennya akan digunakan oleh programmer atau model lain untuk di implentasikan
+Jangan langsung commit ke branch master setiap perubahan
+perubahan akan ada akan dimasukkan dalam  pull request

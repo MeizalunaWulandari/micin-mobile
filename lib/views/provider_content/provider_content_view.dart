@@ -3,6 +3,7 @@ import '../../core/components/provider_content_card.dart';
 import '../../core/constants/app_colors.dart';
 import '../../models/provider.dart';
 import '../../viewmodels/provider_content_viewmodel.dart';
+import '../watch/watch_view.dart';
 
 /// Halaman yang menampilkan daftar data konten dari endpoint slug provider
 class ProviderContentView extends StatefulWidget {
@@ -158,7 +159,16 @@ class _ProviderContentViewState extends State<ProviderContentView> {
             return ProviderContentCard(
               item: item,
               onTap: () {
-                // Callback jika item diklik
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => WatchView(
+                      providerSlug: widget.provider.slug,
+                      contentId: item.id,
+                      initialTitle: item.title,
+                    ),
+                  ),
+                );
               },
             );
           },

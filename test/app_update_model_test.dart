@@ -12,6 +12,14 @@ void main() {
         AppConfig.checkUpdateUrl,
         'https://given-cary-zaxkyu-052e8853.koyeb.app/check-update',
       );
+      expect(
+        AppConfig.userAgent,
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36',
+      );
+      expect(
+        AppConfig.defaultHeaders['User-Agent'],
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36',
+      );
     });
   });
 

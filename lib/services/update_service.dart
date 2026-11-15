@@ -12,7 +12,9 @@ class UpdateService {
   static Future<AppUpdateResponse?> checkUpdate() async {
     final uri = Uri.parse(AppConfig.checkUpdateUrl);
     try {
-      final response = await http.get(uri).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(uri, headers: AppConfig.defaultHeaders)
+          .timeout(const Duration(seconds: 10));
       if (response.statusCode != 200) return null;
       final Map<String, dynamic> jsonBody =
           json.decode(response.body) as Map<String, dynamic>;
